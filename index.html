@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Price is Right: Baby Edition</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .game-card {
+      background-color: #ffe6e6;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      color: #ff6666;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    input[type="number"] {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+      width: 60%;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      background-color: #ff9999;
+      color: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game-card">
+  <h1>🎉 Price is Right: Baby Edition</h1>
+  <div class="question" id="question">How much does a pack of 100 diapers cost?</div>
+  <input type="number" id="userGuess" placeholder="Enter your guess ($)" />
+  <button onclick="checkAnswer()">Submit</button>
+  <div class="result" id="resultText"></div>
+</div>
+
+<script>
+  const questions = [
+    { question: "How much does a pack of 100 diapers cost?", answer: 34.99 },
+    { question: "What is the average price of a baby stroller?", answer: 179.99 },
+    { question: "How much for a can of baby formula (27oz)?", answer: 28.50 },
+    { question: "What’s the price of a basic baby monitor?", answer: 49.99 },
+    { question: "How much does a newborn onesie 3-pack cost?", answer: 14.99 }
+  ];
+
+  let currentQuestion = 0;
+
+  function loadQuestion() {
+    document.getElementById("question").innerText = questions[currentQuestion].question;
+    document.getElementById("userGuess").value = '';
+    document.getElementById("resultText").innerText = '';
+  }
+
+  function checkAnswer() {
+    const guess = parseFloat(document.getElementById("userGuess").value);
+    if (isNaN(guess)) {
+      document.getElementById("resultText").innerText = "Please enter a valid number!";
+      return;
+    }
+
+    const correctPrice = questions[currentQuestion].answer;
+    const diff = Math.abs(correctPrice - guess);
+
+    let message = "";
+    if (diff === 0) {
+      message = `🌟 Perfect! You nailed the exact price of $${correctPrice.toFixed(2)}.`;
+    } else if (diff <= 1) {
+      message = `🔥 So close! The correct price is $${correctPrice.toFixed(2)}.`;
+    } else if (diff <= 5) {
+      message = `👍 Not bad! You were off by $${diff.toFixed(2)}. Correct price: $${correctPrice.toFixed(2)}.`;
+    } else {
+      message = `🙈 Oof! You were off by $${diff.toFixed(2)}. The right price was $${correctPrice.toFixed(2)}.`;
+    }
+
+    document.getElementById("resultText").innerText = message;
+
+    // Next question after 3 seconds
+    setTimeout(() => {
+      currentQuestion = (currentQuestion + 1) % questions.length;
+      loadQuestion();
+    }, 3000);
+  }
+
+  // Initial load
+  loadQuestion();
+</script>
+
+</body>
+</html>
